@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Claude Code 完全指南 | 从0到1 AI驱动开发</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #ffffff; color: #0a0a0a; line-height: 1.5; scroll-behavior: smooth; }
+        body.dark { background: #0a0c10; color: #eef2ff; }
+        .navbar { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px); background: rgba(255,255,255,0.8); border-bottom: 1px solid rgba(0,0,0,0.05); padding: 0.8rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        body.dark .navbar { background: rgba(10,12,16,0.85); border-bottom-color: rgba(255,255,255,0.05); }
+        .logo { font-weight: 800; font-size: 1.5rem; background: linear-gradient(135deg, #1E3A8A, #3B82F6, #7C3AED); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo i { color: #3b82f6; margin-right: 8px; }
+        .theme-btn { background: #eef2ff; border: none; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        body.dark .theme-btn { background: #1e293b; color: #e2e8f0; }
+        .main-grid { max-width: 1300px; margin: 2rem auto; padding: 0 2rem; display: flex; gap: 2rem; }
+        .toc { width: 280px; flex-shrink: 0; position: sticky; top: 90px; height: fit-content; background: #fafcff; border-radius: 2rem; border: 1px solid #eef2ff; padding: 1.5rem 0; }
+        body.dark .toc { background: #11161f; border-color: #1f2a3e; }
+        .toc h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; padding: 0 1.5rem 0.75rem; border-bottom: 1px solid #eef2ff; margin-bottom: 1rem; }
+        body.dark .toc h3 { border-bottom-color: #1f2a3e; }
+        .toc-links { list-style: none; max-height: 65vh; overflow-y: auto; padding-right: 0.25rem; }
+        .toc-links a { display: block; padding: 0.5rem 1.5rem; font-size: 0.85rem; font-weight: 500; color: #334155; text-decoration: none; border-left: 3px solid transparent; transition: 0.2s; }
+        body.dark .toc-links a { color: #cbd5e6; }
+        .toc-links a:hover, .toc-links a.active { background: #eef2ff; border-left-color: #2563eb; color: #1e3a8a; font-weight: 600; }
+        body.dark .toc-links a:hover, body.dark .toc-links a.active { background: #1e2a44; color: #93c5fd; }
+        .content { flex: 1; background: #ffffff; border-radius: 2rem; border: 1px solid #eef2ff; padding: 2.5rem; box-shadow: 0 8px 30px rgba(0,0,0,0.02); }
+        body.dark .content { background: #0f131c; border-color: #1f2a3e; }
+        h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #0f172a, #2563eb); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body.dark h1 { background: linear-gradient(135deg, #e2e8f0, #60a5fa); -webkit-background-clip: text; }
+        h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid #eef2ff; }
+        body.dark h2 { border-bottom-color: #1f2a3e; }
+        h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+        p { margin-bottom: 1rem; color: #1f2937; }
+        body.dark p { color: #cbd5e6; }
+        code { font-family: monospace; background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 8px; font-size: 0.85em; }
+        body.dark code { background: #1e293b; }
+        pre { background: #0a0c10; border-radius: 1.2rem; padding: 1.2rem; overflow-x: auto; margin: 1.5rem 0; position: relative; border: 1px solid #2d3a5e; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: #334155; border: none; color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; cursor: pointer; opacity: 0.8; }
+        .copy-btn:hover { background: #3b82f6; }
+        .info-card { background: linear-gradient(135deg, #eef2ff, #ffffff); border-radius: 1.5rem; padding: 1.2rem 1.5rem; margin: 1.5rem 0; border: 1px solid #d9e2ef; }
+        body.dark .info-card { background: #111a2c; border-color: #2d3a5e; }
+        .badge { background: #3b82f6; color: white; padding: 0.2rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-right: 0.6rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; background: #f8fafc; border-radius: 1rem; overflow: hidden; }
+        body.dark table { background: #10161f; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        body.dark th, body.dark td { border-bottom-color: #1f2a3e; }
+        th { background: #eef2ff; font-weight: 600; }
+        body.dark th { background: #1a2538; }
+        .footer { text-align: center; padding: 2rem; font-size: 0.8rem; border-top: 1px solid #eef2ff; margin-top: 2rem; }
+        @media (max-width: 850px) { .main-grid { flex-direction: column; } .toc { width: 100%; position: static; } .content { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="navbar"><div class="logo"><i class="fab fa-raspberry-pi"></i> Claude Code · 深度开发</div><button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i> <span>深色模式</span></button></div>
+<div class="main-grid"><aside class="toc"><h3><i class="fas fa-list-ul"></i> 导航</h3><ul class="toc-links" id="tocLinks"></ul></aside><main class="content" id="mainContent"></main></div>
+<div class="footer"><i class="fas fa-robot"></i> 从零到一 · AI驱动开发 | 标准顺序：PRD → 脚手架 → CLAUDE.md → 功能拆解 → 迭代执行</div>
+
+<script>
+    // 使用数组拼接避免模板字符串中的反引号问题
+    const guideHTML = [
+        '<h1>📘 从0到1 · Claude Code 完全指南</h1>',
+        '<div class="info-card"><i class="fas fa-crown" style="color:#3b82f6;"></i> <strong>标准工作流（重要顺序）</strong><br>',
+        '<strong>1. PRD</strong> → <strong>2. 脚手架生成</strong> → <strong>3. CLAUDE.md（AI宪法）</strong> → <strong>4. 功能拆解</strong> → <strong>5. 逐个迭代执行</strong><br>',
+        'CLAUDE.md 必须在功能拆解之前，因为拆解过程也需要遵循项目规范。</div>',
+
+        '<h2 id="prepare">🔧 前置准备</h2>',
+        '<pre><code class="language-bash">npm install -g @anthropic-ai/claude-code',
+        'claude --version</code></pre>',
+        '<p>首次运行 <code>claude</code> 登录授权。推荐配合 Git 使用。</p>',
+
+        '<h2 id="phase1">📄 阶段一：编写 PRD</h2>',
+        '<p>创建 <code>docs/PRD.md</code>，描述项目目标、功能列表、技术栈（可选）。示例：</p>',
+        '<pre><code class="language-markdown"># 短链接平台',
+        '## 核心功能',
+        '1. 匿名创建短链接',
+        '2. 短链跳转+点击统计',
+        '3. 用户注册/登录（JWT）',
+        '4. 个人短链管理看板',
+        '## 技术约束（可选）',
+        'Node.js + Express + SQLite + Jest</code></pre>',
+
+        '<h2 id="phase2_upper">🏗️ 阶段二：脚手架生成（通用提示词）</h2>',
+        '<p>让 CC 读取 PRD，自动搭建项目框架，支持任意技术栈。</p>',
+        '<pre><code class="language-text">请根据 docs/PRD.md 完成项目脚手架搭建：',
+        '1. 提取技术栈（若无则推荐并确认）',
+        '2. 初始化项目结构、安装依赖、创建目录、入口文件、脚本配置',
+        '3. 生成 .gitignore 和 README',
+        '4. 需要确认时暂停</code></pre>',
+
+        '<h2 id="phase3">📜 阶段三：编写 AI 宪法（CLAUDE.md）— <span style="color:#2563eb;">在功能拆解之前执行</span></h2>',
+        '<p><strong>时机：脚手架生成后立即创建，再进行功能拆解。</strong> 运行 <code>/init</code> 生成初始版本，补充以下内容：</p>',
+        '<pre><code class="language-markdown"># CLAUDE.md - AI宪法',
+        '## 技术栈',
+        '（根据实际填写，例如 Node.js 20+ + Express + SQLite + Jest）',
+        '',
+        '## 硬性约束',
+        '- 所有异步操作必须使用 async/await',
+        '- 每个功能必须编写测试（覆盖率 ≥ 80%）',
+        '- 目录结构遵循 src/{routes,controllers,models,middlewares}',
+        '- 每次修改后必须运行 npm test 并全部通过',
+        '',
+        '## 行为准则（Karpathy 原则）',
+        '1. **先思后写**：澄清需求，列出假设。在产出代码前，先确认问题边界、技术方案，避免盲目编码。',
+        '2. **简洁至上**：避免过度抽象。用最少的代码实现功能，不提前引入设计模式或未来可能需要的灵活性。',
+        '3. **精准修改**：只改任务相关代码。不顺手“优化”无关模块，不进行与当前任务无关的重构。',
+        '4. **测试驱动**：先写失败测试，再实现功能。确保每个新功能都有对应的测试用例，且修改后所有测试通过。</code></pre>',
+        '<p>将上述内容写入 <code>CLAUDE.md</code> 并提交 Git，此后 Claude 会在每个会话中自动遵循。</p>',
+
+        '<h2 id="phase4_lower">🧩 阶段四：功能拆解（CC 先规划，不写代码）</h2>',
+        '<p>此时 CLAUDE.md 已存在，CC 将遵循规范进行拆解。</p>',
+        '<pre><code class="language-text">请根据 docs/PRD.md 和 CLAUDE.md 进行功能拆解，输出迭代计划表格。',
+        '要求：拆解为 3-8 个独立可交付的迭代，包含名称、描述、模块、测试类型。',
+        '确认后，每次只实现一个迭代，完成后提示我验证，再继续下一个。</code></pre>',
+        '<div class="info-card"><i class="fas fa-table-list"></i> 拆解示例（短链接平台）<br>',
+        '<table style="margin:0"><thead><tr><th>迭代</th><th>功能</th><th>测试</th></tr></thead><tbody>',
+        '<tr><td>1</td><td>匿名创建短链接</td><td>集成测试</td></tr>',
+        '<tr><td>2</td><td>短链跳转+点击计数</td><td>集成测试</td></tr>',
+        '<tr><td>3</td><td>用户注册/登录(JWT)</td><td>单元+集成</td></tr>',
+        '<tr><td>4</td><td>个人短链管理</td><td>集成测试</td></tr>',
+        '</tbody></table></div>',
+
+        '<h2 id="saveplan">💾 保存拆解计划到文件（实现会话恢复的关键）</h2>',
+        '<p><strong>为什么需要保存？</strong> 每个迭代完成后，建议使用 <code>/clear</code> 清空对话历史，这样可以：</p>',
+        '<ul><li>节省 token 成本（对话越长，费用越高）</li><li>避免上下文干扰，让 CC 专注于当前迭代</li></ul>',
+        '<p>但 <code>/clear</code> 会丢失之前的对话记忆（包括已拆解的迭代计划）。为了解决这个问题，需要将拆解结果持久化到项目文件中。</p>',
+        '<p><strong>保存计划的提示词（拆解确认后立即执行）：</strong></p>',
+        '<pre><code class="language-text">请将刚才确认的迭代计划保存到 docs/迭代计划.md 中，格式如下：',
+        '# 迭代计划',
+        '- [ ] 迭代1：匿名创建短链接（未开始）',
+        '- [ ] 迭代2：短链跳转+点击统计',
+        '- [ ] 迭代3：用户注册/登录',
+        '- [ ] 迭代4：个人短链管理',
+        '同时注明每个迭代的实现要点和测试要求。</code></pre>',
+
+        '<h2 id="autoupdate">🔄 自动更新计划文件状态（已完成迭代标记）</h2>',
+        '<p><strong>提示词要求 CC 在完成每个迭代后自动更新文件：</strong></p>',
+        '<pre><code class="language-text">请实现迭代 N，完成后请将 docs/迭代计划.md 中对应项的 [ ] 改为 [x]，并注明完成时间。</code></pre>',
+        '<p>这样每次迭代结束，计划文件中的状态会自动更新，进度永不丢失。</p>',
+
+        '<h2 id="recover">📂 新会话中恢复进度（无需重复拆解）</h2>',
+        '<p>当您清空历史或重新打开 Claude Code 后，只需让 CC 读取计划文件，并告知当前进度：</p>',
+        '<pre><code class="language-text">请读取 docs/迭代计划.md，我目前已经完成了迭代1和迭代2，请继续实现迭代3。',
+        '要求：遵循 CLAUDE.md 中的规范，先写测试，完成后验证并更新计划文件中的状态。</code></pre>',
+        '<p>CC 会根据文件中的描述直接开始下一个迭代，无需重新解释需求。</p>',
+
+        '<h2 id="phase5">⚙️ 阶段五：迭代执行（简单指令）</h2>',
+        '<p>拆解并保存计划后，只需说：<code>请开始迭代 1</code>。CC 会根据计划描述自动实现、测试，完成后提示验证，并更新计划文件。您回复 <code>继续</code> 进入下一迭代。</p>',
+        '<div class="info-card"><i class="fas fa-comment-dots"></i> 示例对话：<br>',
+        '👤 用户：开始迭代1（或 请实现迭代1，完成后更新计划文件）<br>',
+        '🤖 CC：正在实现「匿名创建短链接」... [写测试→实现→测试通过] ✅ 迭代1完成，已更新 docs/迭代计划.md（将 [ ] 改为 [x]）。请验证。回复继续。<br>',
+        '👤 用户：继续</div>',
+
+        '<h2 id="token_cost">💰 Token 成本对比：是否使用 `/clear`</h2>',
+        '<p><strong>重要澄清：</strong> <code>/clear</code> 只清空对话历史，<strong>不会让 CC 重新扫描整个项目</strong>。项目文件是通过工具调用按需读取的，每次迭代本身就会读取相关文件。因此，<code>/clear</code> 后的恢复会话并不会额外增加大量 token 消耗。</p>',
+        '<div class="table-wrapper">',
+        '<table><thead><tr><th>方案</th><th>每次迭代输入 token（估算）</th><th>5次迭代总 token</th><th>优点</th><th>缺点</th></tr></thead><tbody>',
+        '<tr><td>不 <code>/clear</code></td><td>第1次 10k → 第5次 80k+</td><td>≈ 200k</td><td>无需恢复上下文</td><td>历史臃肿，可能超限；携带大量无关信息</td></tr>',
+        '<tr><td>每次迭代后 <code>/clear</code> + 读计划文件</td><td>每次稳定 5-10k</td><td>≈ 30-50k</td><td>成本节省 70%+；每次会话干净</td><td>需保存进度（已通过计划文件自动化）</td></tr>',
+        '</tbody></table></div>',
+        '<p><strong>最佳实践：</strong> 对于超过 3 个迭代的项目，强烈建议每个迭代完成后执行 <code>/clear</code>，并在新会话中读取计划文件继续。对于单个迭代内部的调试，保留历史更有帮助。</p>',
+
+        '<h2 id="templates">📋 Prompt 模板速查</h2>',
+        '<pre><code class="language-markdown">【脚手架生成】见阶段二提示词',
+        '【功能拆解】见阶段四提示词',
+        '【保存拆解计划】将迭代计划保存到 docs/迭代计划.md',
+        '【自动更新状态】实现迭代 N，完成后更新计划文件中的 [ ] 为 [x]',
+        '【恢复会话】请读取 docs/迭代计划.md，我已完成迭代1和2，继续迭代3',
+        '【执行迭代】开始迭代 N（并自动更新状态）</code></pre>',
+
+        '<h2 id="tips">💡 高级技巧与成本控制</h2>',
+        '<ul>',
+        '<li><strong>/clear 清空历史</strong>：每个迭代完成后使用，大幅节省 token，务必先保存计划文件。</li>',
+        '<li><strong>自动更新计划文件</strong>：每次迭代完成后让 CC 更新 MD 文件中的勾选状态，进度永不丢失。</li>',
+        '<li><strong>/powerup</strong> 内置教程提升熟练度。</li>',
+        '<li><strong>Skills</strong>：创建 <code>.claude/skills/</code> 添加领域知识。</li>',
+        '</ul>',
+
+        '<h2 id="mistakes">⚠️ 常见误区</h2>',
+        '<ul><li>❌ 认为 <code>/clear</code> 会让 CC 重新读取所有项目代码 → ✅ 不会，它只清空聊天记录</li>',
+        '<li>❌ 清空前不保存拆解计划 → ✅ 保存到文件，新会话中恢复</li>',
+        '<li>❌ 先拆解后写 CLAUDE.md → ✅ 先写 AI 宪法再拆解</li></ul>',
+
+        '<h2 id="roadmap">🗓️ 学习路线（修正版）</h2>',
+        '<div class="table-wrapper">',
+        '<table><thead><tr><th>周次</th><th>学习内容</th><th>对应阶段</th></tr></thead><tbody>',
+        '<tr><td><strong>第 1 周</strong></td><td>安装 Claude Code，编写 PRD，学习 <code>/init</code> 和基础对话</td><td>前置准备 + 阶段一</td></tr>',
+        '<tr><td><strong>第 2 周</strong></td><td>脚手架生成 + 编写 CLAUDE.md（AI 宪法）</td><td>阶段二（上）+ 阶段三</td></tr>',
+        '<tr><td><strong>第 3 周</strong></td><td>功能拆解 + 保存计划文件 + 执行第一个完整迭代</td><td>阶段二（下）+ 阶段四</td></tr>',
+        '<tr><td><strong>第 4 周</strong></td><td>完成 3-5 个迭代的小项目，练习 <code>/clear</code> 与会话恢复</td><td>阶段五（迭代执行）</td></tr>',
+        '<tr><td><strong>第 5 周</strong></td><td>加入测试覆盖率、CI 配置、Docker 部署，完成完整项目</td><td>扩展实践</td></tr>',
+        '</tbody></table></div>',
+        '<p>本路线与文档中的阶段顺序完全一致，确保循序渐进，每步都有明确目标。</p>',
+
+        '<div style="background: linear-gradient(135deg, #0f172a, #0b1120); border-radius: 2rem; padding: 2rem; text-align: center; margin: 2rem 0; color: white;">',
+        '<i class="fas fa-database" style="font-size: 2rem;"></i>',
+        '<p style="color:#e2e8f0;">核心实践：拆解计划 → 保存到文件 → 清空历史 → 读取文件恢复 → 继续迭代</p>',
+        '<p style="font-size:0.85rem;">让 AI 的“记忆”不再依赖对话历史，而是项目文件。</p>',
+        '</div>'
+    ].join('\n');
+
+    const contentDiv = document.getElementById('mainContent');
+    contentDiv.innerHTML = guideHTML;
+
+    // 目录生成
+    const headings = contentDiv.querySelectorAll('h2');
+    const tocContainer = document.getElementById('tocLinks');
+    function buildTOC() {
+        const frag = document.createDocumentFragment();
+        headings.forEach((h, idx) => {
+            let id = h.id;
+            if (!id) { id = 'h-' + idx; h.id = id; }
+            const a = document.createElement('a');
+            a.href = '#' + id;
+            a.textContent = h.textContent.replace(/[🔧📄🏗️📜🧩💾🔄📂⚙️💰📋💡⚠️🗓️]/g, '').trim();
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                h.scrollIntoView({ behavior: 'smooth' });
+                setActive(a);
+            });
+            const li = document.createElement('li');
+            li.appendChild(a);
+            frag.appendChild(li);
+        });
+        tocContainer.innerHTML = '';
+        tocContainer.appendChild(frag);
+    }
+    function setActive(active) {
+        document.querySelectorAll('.toc-links a').forEach(link => link.classList.remove('active'));
+        active.classList.add('active');
+    }
+    function observeActive() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const link = tocContainer.querySelector('a[href="#' + id + '"]');
+                    if (link) setActive(link);
+                }
+            });
+        }, { rootMargin: '-30px 0px -60% 0px', threshold: 0.3 });
+        headings.forEach(h => observer.observe(h));
+    }
+    buildTOC();
+    observeActive();
+
+    // 复制按钮
+    document.querySelectorAll('pre').forEach(pre => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.innerHTML = '<i class="far fa-copy"></i> 复制';
+        btn.addEventListener('click', () => {
+            const code = pre.querySelector('code');
+            const text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text);
+            btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+            setTimeout(() => btn.innerHTML = '<i class="far fa-copy"></i> 复制', 1800);
+        });
+        pre.style.position = 'relative';
+        pre.appendChild(btn);
+    });
+    hljs.highlightAll();
+
+    // 深色模式
+    const toggleBtn = document.getElementById('themeToggle');
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.body.classList.add('dark');
+    const updateBtn = () => {
+        if (document.body.classList.contains('dark')) toggleBtn.innerHTML = '<i class="fas fa-sun"></i> <span>亮色模式</span>';
+        else toggleBtn.innerHTML = '<i class="fas fa-moon"></i> <span>深色模式</span>';
+    };
+    updateBtn();
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        updateBtn();
+    });
+</script>
+</body>
+</html>
